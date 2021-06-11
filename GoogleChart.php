@@ -22,6 +22,12 @@ use yii\web\View;
 class GoogleChart extends Widget
 {
     public $message;
+
+    /**
+     * @var string $mapsApiKey the Google Maps Api Key
+     */
+    public $mapsApiKey;
+
     /**
      * @var string $containerId the container Id to render the visualization to
      */
@@ -37,9 +43,7 @@ class GoogleChart extends Widget
      * @var string $packages the type of packages, default is corechart
      * @see https://google-developers.appspot.com/chart/interactive/docs/gallery
      */
-    public $packages = 'corechart';  // such as 'orgchart' and so on.
-
-    public $loadVersion = "1"; //such as 1 or 1.1  Calendar chart use 1.1.  Add at Sep 16
+    public $packages = ['corechart'];  // such as 'orgchart' and so on.
 
     /**
      * @var array $data the data to configure visualization
@@ -96,7 +100,7 @@ class GoogleChart extends Widget
         $jsOptions = Json::encode($this->options);
 
         $script = '
-			google.setOnLoadCallback(drawChart' . $id . ');
+			google.charts.setOnLoadCallback(drawChart' . $id . ');
 			var ' . $id . '=null;
 			function drawChart' . $id . '() {
 				var data = google.visualization.arrayToDataTable(' . $jsData . ');
@@ -110,8 +114,8 @@ class GoogleChart extends Widget
 			}';
 
         $view = $this->getView();
-        $view->registerJsFile('https://www.google.com/jsapi',['position' => View::POS_HEAD]);
-        $view->registerJs('google.load("visualization", "' . $this->loadVersion . '", {packages:["' . $this->packages . '"]});', View::POS_HEAD, __CLASS__ . '#' . $id);
+        $view->registerJsFile('https://www.gstatic.com/charts/loader.js',['position' => View::POS_HEAD]);
+        $view->registerJs('google.charts.load("current", {packages:' . json_encode($this->packages) . ((array_intersect(['map', 'geochart'], $this->packages)) ? ', "mapsApiKey":"' . $this->mapsApiKey . '"' : '') .'});', View::POS_HEAD, __CLASS__ . '#' . $id);
         $view->registerJs($script, View::POS_HEAD, $id);
     }
 
