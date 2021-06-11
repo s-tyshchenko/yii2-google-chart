@@ -92,7 +92,8 @@ You also can refer to https://developers.google.com/chart/interactive/docs/quick
                     'title' => 'Expenses vs Sales',
                 )));
                 
-            echo GoogleChart::widget( array('visualization' => 'Gauge', 'packages' => 'gauge',
+            echo GoogleChart::widget( array('visualization' => 'Gauge', 
+                'packages' => ['gauge'],
                 'data' => array(
                     array('Label', 'Value'),
                     array('Memory', 80),
@@ -110,8 +111,9 @@ You also can refer to https://developers.google.com/chart/interactive/docs/quick
                 )
             ));
             echo GoogleChart::widget( array('visualization' => 'Map',
-                'packages'=>'map',//default is corechart
-                'loadVersion'=>1,//default is 1.  As for Calendar, you need change to 1.1
+                'packages'=> ['map'], //default is corechart
+                'mapsApiKey' => 'your-google-maps-api-key' //activate Geocoding and Maps Javascript Api in your Cloud Console
+                'loadVersion'=> 1, //default is 1.  As for Calendar, you need change to 1.1
                 'data' => array(
                     ['Country', 'Population'],
                     ['China', 'China: 1,363,800,000'],
